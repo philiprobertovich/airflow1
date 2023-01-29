@@ -37,20 +37,20 @@ with DAG(
 ) as dag:
 
   # Task that will write my name to txt file
-  task_1 = BashOperator(
-    task_id = 'task_1',
+  echo_name = BashOperator(
+    task_id = 'echo_name',
     bash_command='echo "Philip" > code_review.txt'
   )
 
   # Task that will will execute print_hello function
-  task_2 = PythonOperator(
-    task_id="task_2",
+  print_name = PythonOperator(
+    task_id="print_name",
     python_callable=print_hello
   )
 
   # Task that will echo "picking three random apples"
-  task_3 = BashOperator(
-    task_id="task_3",
+  echo_apples = BashOperator(
+    task_id="echo_apples",
     bash_command="echo 'picking three random apples'"
   )
   
@@ -68,24 +68,24 @@ with DAG(
   #   # Set task orders 4-6 to be parallel
   #   task_1 >> task_2 >> task_3 >> tasks
 
-  task_4=PythonOperator(
-    task_id="task_4",
+  pick_apple_1=PythonOperator(
+    task_id="pick_apple_1",
     python_callable=pick_apple
   )
 
-  task_5=PythonOperator(
-    task_id="task_5",
+  pick_apple_2=PythonOperator(
+    task_id="pick_apple_2",
     python_callable=pick_apple
   )
 
-  task_6=PythonOperator(
-    task_id="task_6",
+  pick_apple_3=PythonOperator(
+    task_id="pick_apple_3",
     python_callable=pick_apple
   )
 
-  task_7 = DummyOperator(
-    task_id="task_7"
+  end_task = DummyOperator(
+    task_id="end_task"
   )
 
   # Task order
-  task_1 >> task_2 >> task_3 >> [task_4, task_5, task_6] >> task_7
+  echo_name >> print_name >> echo_apples >> [pick_apple_1, pick_apple_2, pick_apple_3] >> end_task
