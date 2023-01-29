@@ -52,6 +52,8 @@ with DAG(
     task_id="task_3",
     bash_command="echo 'picking three random apples'"
   )
+  
+  apple_list = []
 
   for i in range(3):
     
@@ -59,9 +61,12 @@ with DAG(
     def pick_apples():
       apple = random.choice(APPLES)
       print(apple)
-    
+
     tasks = pick_apples()
-    
+
+    # Set task orders 4-6 to be parallel
+    task_1 >> task_2 >> task_3 >> tasks
+
     # task=PythonOperator(
     #   task_id="task_"+str(i+4),
     #   python_callable=pick_apple
@@ -70,6 +75,7 @@ with DAG(
   task_7 = DummyOperator(
     task_id="task_7"
   )
-
+  # Task order for last task
+  tasks >> task_7
   # Task order
-  task_1 >> task_2 >> task_3 >> tasks >> task_7
+  # task_1 >> task_2 >> task_3 >> [tasks] >> task_7
