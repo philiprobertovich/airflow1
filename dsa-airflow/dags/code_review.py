@@ -1,5 +1,6 @@
 # Library imports
 from datetime import timedelta, datetime
+import random
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.bash import BashOperator
@@ -13,6 +14,9 @@ APPLES =['pink lady', 'jazz', 'orange pippin', 'granny smith', 'red delicious', 
 def print_hello():
   with open("code_review.txt", "r") as name_file:
     print(f"Hello {name_file}!")
+
+def pick_apple():
+  return random.choice(APPLES)
 
 # Sets the default DAG args
 default_args = {
@@ -40,3 +44,22 @@ with DAG(
     task_id="task_2",
     python_callable=print_hello
   )
+
+  # Task that will echo "picking three random apples"
+  task_3 = BashOperator(
+    task_id="task_3",
+    bash_command="echo 'picking three random apples'"
+  )
+
+  for i in range(3):
+    task=PythonOperator(
+      task_id="task_"+str(i+3),
+      python_callable=pick_apple
+    )
+
+  task_7 = DummyOperator(
+    task_id="task_7"
+  )
+
+  # Task order
+  task_1 >> task_2 >> task_3 >> task >> task_7
