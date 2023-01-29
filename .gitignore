@@ -3,3 +3,4 @@ plugins/
 .env
 venv/
 docker-compose.yaml
+__pycache__/
