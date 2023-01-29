@@ -5,6 +5,7 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
+from airflow.decorators import task
 from airflow.utils.dates import days_ago
 
 # Constant list of apples.
@@ -15,8 +16,9 @@ def print_hello():
   with open("code_review.txt", "r") as name_file:
     print(f"Hello {name_file}!")
 
-def pick_apple():
-  return random.choice(APPLES)
+# Picks random apple from APPLES list
+# def pick_apple():
+#   return random.choice(APPLES)
 
 # Sets the default DAG args
 default_args = {
@@ -52,14 +54,22 @@ with DAG(
   )
 
   for i in range(3):
-    task=PythonOperator(
-      task_id="task_"+str(i+3),
-      python_callable=pick_apple
-    )
+    
+    @task(task_id=f"task_{i+4}")
+    def pick_apples():
+      apple = random.choice(APPLES)
+      print(apple)
+    
+    tasks = pick_apples()
+    
+    # task=PythonOperator(
+    #   task_id="task_"+str(i+4),
+    #   python_callable=pick_apple
+    # )
 
   task_7 = DummyOperator(
     task_id="task_7"
   )
 
   # Task order
-  task_1 >> task_2 >> task_3 >> task >> task_7
+  task_1 >> task_2 >> task_3 >> tasks >> task_7
