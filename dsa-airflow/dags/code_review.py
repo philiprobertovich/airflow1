@@ -17,8 +17,9 @@ def print_hello():
     print(f"Hello {name_file}!")
 
 # Picks random apple from APPLES list
-# def pick_apple():
-#   return random.choice(APPLES)
+def pick_apple():
+  apple = random.choice(APPLES)
+  print(apple)
 
 # Sets the default DAG args
 default_args = {
@@ -53,29 +54,38 @@ with DAG(
     bash_command="echo 'picking three random apples'"
   )
   
-  apple_list = []
-
-  for i in range(3):
+  
+  # ***Alternate way to create tasks 4-6*** 
+  # for i in range(3):
     
-    @task(task_id=f"task_{i+4}")
-    def pick_apples():
-      apple = random.choice(APPLES)
-      print(apple)
+  #   @task(task_id=f"task_{i+4}")
+  #   def pick_apples():
+  #     apple = random.choice(APPLES)
+  #     print(apple)
 
-    tasks = pick_apples()
+  #   tasks = pick_apples()
 
-    # Set task orders 4-6 to be parallel
-    task_1 >> task_2 >> task_3 >> tasks
+  #   # Set task orders 4-6 to be parallel
+  #   task_1 >> task_2 >> task_3 >> tasks
 
-    # task=PythonOperator(
-    #   task_id="task_"+str(i+4),
-    #   python_callable=pick_apple
-    # )
+  task_4=PythonOperator(
+    task_id="task_4",
+    python_callable=pick_apple
+  )
+
+  task_5=PythonOperator(
+    task_id="task_5",
+    python_callable=pick_apple
+  )
+
+  task_6=PythonOperator(
+    task_id="task_6",
+    python_callable=pick_apple
+  )
 
   task_7 = DummyOperator(
     task_id="task_7"
   )
-  # Task order for last task
-  tasks >> task_7
+
   # Task order
-  # task_1 >> task_2 >> task_3 >> [tasks] >> task_7
+  task_1 >> task_2 >> task_3 >> [task_4, task_5, task_6] >> task_7
