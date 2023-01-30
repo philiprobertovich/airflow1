@@ -17,6 +17,7 @@ The pipeline created for this project accomplishes up to 7 tasks. The first task
 
 
 Below is the DAG:
+
 <img src="img/code_review_dag.jpg" alt="DAG of Code Review Pipeline" width=400/>
 
 ## Setup/Installation Requirements
