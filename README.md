@@ -2,7 +2,7 @@
 
 ### By Philip Kendall
 
-#### This project setups a basic pipline in Airflow that accomplishes simple tasks.
+#### This project sets up a basic pipline in Airflow that accomplishes simple tasks.
 ## Technologies Used
 
 * GIT
@@ -56,7 +56,7 @@ Below is the DAG:
   ```
 * Navigate to localhost:8080/home in your browser and enter the Airflow credentials. Both username and password should be "airflow".
 * Find "code_review" under the DAG column and unpause the DAG.
-* After that, the DAG should run. Click on "code_review" to see the different views of the DAG.
+* After that, the DAG should run. Click on "code_review" to see the different views of the DAG's execution.
 
 ## Known Bugs
 
