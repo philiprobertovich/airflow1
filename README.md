@@ -13,7 +13,7 @@
 
 ## Description
 
-The pipeline created for this project accomplishes up to 7 tasks. The first task echoes my name and the output gets put into a txt file. The second task then reads and prints the contents of that txt file. The next task echoes that three apples are going to be picked. Once that task is completed, the following next 3 taks run parallel with each other and all pick and print out a random name of a type of apple which is stored in a static list. The final task does nothing, but signify the end of the DAG.
+The pipeline created for this project accomplishes up to 7 tasks. The first task echoes my name and the output gets put into a txt file. The second task then reads and prints the contents of that txt file. The next task echoes that three apples are going to be picked. Once that task is completed, the following next 3 taks run parallel with each other. They each print a random name of a type of apple from a static list, which is declared near the top of the pipeline. The final task does nothing, but signify the end of the DAG.
 
 
 Below is the DAG:
