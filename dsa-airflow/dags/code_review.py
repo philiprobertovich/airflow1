@@ -1,11 +1,11 @@
 # Library imports
+import os
 from datetime import timedelta, datetime
 import random
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-from airflow.decorators import task
 from airflow.utils.dates import days_ago
 
 # Constant list of apples.
@@ -13,7 +13,12 @@ APPLES =['pink lady', 'jazz', 'orange pippin', 'granny smith', 'red delicious', 
 
 # Task that will read and print content from the txt file along with a greeting
 def print_hello():
-  with open("code_review.txt", "r") as name_file:
+  # get file path of code review txt file
+  filepath = os.path.abspath(__file__)
+  dir_name = os.path.dirname(filepath)
+  code_path = os.path.join(dir_name, "code_review.txt")
+
+  with open(code_path, "r") as name_file:
     print(f"Hello {name_file}!")
 
 # Picks random apple from APPLES list
@@ -54,38 +59,18 @@ with DAG(
     bash_command="echo 'picking three random apples'"
   )
   
-  
-  # ***Alternate way to create tasks 4-6*** 
-  # for i in range(3):
-    
-  #   @task(task_id=f"task_{i+4}")
-  #   def pick_apples():
-  #     apple = random.choice(APPLES)
-  #     print(apple)
-
-  #   tasks = pick_apples()
-
-  #   # Set task orders 4-6 to be parallel
-  #   task_1 >> task_2 >> task_3 >> tasks
-
-  pick_apple_1=PythonOperator(
-    task_id="pick_apple_1",
-    python_callable=pick_apple
-  )
-
-  pick_apple_2=PythonOperator(
-    task_id="pick_apple_2",
-    python_callable=pick_apple
-  )
-
-  pick_apple_3=PythonOperator(
-    task_id="pick_apple_3",
-    python_callable=pick_apple
-  )
+  # Task 4-6 that will pick the name of an apple from the list
+  apple_task_list = []
+  for i in range(1,4):
+    apple_task=PythonOperator(
+      task_id=f"pick_apple_{i}",
+      python_callable=pick_apple
+    )
+    apple_task_list.append(apple_task)
 
   end_task = DummyOperator(
     task_id="end_task"
   )
 
   # Task order
-  echo_name >> print_name >> echo_apples >> [pick_apple_1, pick_apple_2, pick_apple_3] >> end_task
+  echo_name >> print_name >> echo_apples >> apple_task_list >> end_task
